@@ -3,18 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Prototype</title>
+<title>redJSR</title>
+
+<!-- Ruffle plays buildboardad1.swf without Flash -->
+<script>
+  window.RufflePlayer = window.RufflePlayer || {};
+  window.RufflePlayer.config = {
+    autoplay: "on",
+    unmuteOverlay: "hidden",
+    splashScreen: false,
+    wmode: "transparent"
+  };
+</script>
+<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+
 <style>
   html, body {
-    height: 100%;
     margin: 0;
+    padding: 0;
   }
 
   body {
     background-color: #888; /* shows only until the tiles finish loading */
-    display: flex;
-    flex-direction: column;
-    min-height: 100%;
+    overflow-x: hidden;
+    font-family: "Adobe Clean", "Myriad Pro", "Segoe UI", Helvetica, Arial, sans-serif;
+    color: #fff;
   }
 
   /* Full-screen canvas that holds the checkerboard background */
@@ -26,14 +39,156 @@
     z-index: -1;
   }
 
-  main {
-    flex: 1; /* pushes the footer to the bottom */
+  /* ---------- Page column ---------- */
+  .wrap {
+    position: relative;
+    width: 1000px;
+    max-width: 100%;
+    margin: 0 auto;
+    min-height: max(100vh, 960px);
   }
 
-  footer {
+  .page {
+    position: absolute;
+    inset: 0;
+    background: #000;
+  }
+
+  .wrap > .item {
+    position: absolute;
+    z-index: 2;
+  }
+
+  /* ---------- Logo + menu ---------- */
+  .logo {
+    left: 32px;
+    top: 10px;
+    width: 148px;
+    height: auto;
+  }
+
+  .nav {
+    left: 32px;
+    top: 96px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 22px;
+    font-weight: 300;
+    line-height: 35px;
+  }
+  .nav a, .nav span {
+    color: #fff;
+    text-decoration: none;
+  }
+  .nav a:hover {
+    text-decoration: underline;
+  }
+
+  /* ---------- Message ---------- */
+  .message {
+    left: 32px;
+    top: 440px;
+    width: 340px;
+    font-size: 22px;
+    line-height: 1.35;
+    font-weight: 300;
+  }
+  .message h1 {
+    margin: 0 0 10px;
+    font-size: 36px;
+    line-height: 1.15;
+    font-weight: 400;
+  }
+  .message p {
+    margin: 0;
+  }
+
+  /* ---------- random.gif box ---------- */
+  .gifbox {
+    left: 32px;
+    bottom: 96px;
+    width: 250px;
+    height: 195px;
+    box-sizing: border-box;
+    border: 4px solid #fff;
+    background: #000;
+  }
+  .gifbox img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* ---------- Billboard (swf) ---------- */
+  .billboard {
+    right: 24px;
+    top: 0;
+    width: 392px;
+    height: 430px;
+  }
+  .billboard embed,
+  .billboard ruffle-embed,
+  .billboard ruffle-object {
+    display: block;
+    width: 392px;
+    height: 430px;
+  }
+
+  /* ---------- Social icons ---------- */
+  .socials {
+    right: 28px;
+    top: 525px;
     display: flex;
-    justify-content: center;
-    padding: 16px;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .socials img {
+    display: block;
+    width: 54px;
+    height: auto;
+  }
+
+  /* ---------- Get Ruffle ---------- */
+  .ruffle {
+    right: 24px;
+    bottom: 96px;
+  }
+  .ruffle img {
+    display: block;
+    width: 160px;
+    height: auto;
+  }
+
+  /* ---------- Counter ---------- */
+  .counter {
+    left: 50%;
+    bottom: 88px;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+
+  /* ---------- Yellow bottom bar ---------- */
+  .bar {
+    position: absolute;
+    z-index: 3;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    box-sizing: border-box;
+    padding: 12px 24px;
+    background: #f6f6c8;
+    border-radius: 8px 8px 0 0;
+    color: #000;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    line-height: 1.3;
+  }
+  .bar .copy {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #444;
   }
 </style>
 </head>
@@ -41,10 +196,50 @@
 
 <canvas id="bg"></canvas>
 
-<main></main>
+<div class="wrap">
+  <div class="page"></div>
 
-<footer>
-  <div style="text-align:center;">
+  <!-- Logo and menu -->
+  <img class="item logo" src="logo.png" alt="redJSR">
+  <ul class="item nav">
+    <li><a href="index.html">Home</a></li>
+    <li><span>Games</span></li>
+    <li><span>Comics</span></li>
+    <li><a href="https://redjsr.github.io/redjsrwiki/" target="_blank" rel="noopener">Wiki</a></li>
+    <li><span>Socials</span></li>
+    <li><span>Greenbox</span></li>
+    <li><span>Merch</span></li>
+    <li><span>Cartoons</span></li>
+  </ul>
+
+  <!-- Message -->
+  <div class="item message">
+    <h1>Welcome to redJSR!</h1>
+    <p>This website is still under construction, so some pages and links might not work yet. Thanks for stopping by, and check back soon for new games, comics, and more!</p>
+  </div>
+
+  <!-- random.gif -->
+  <div class="item gifbox">
+    <img src="random.gif" alt="Dancing stickman">
+  </div>
+
+  <!-- Billboard -->
+  <div class="item billboard">
+    <embed src="buildboardad1.swf" width="392" height="430" type="application/x-shockwave-flash">
+  </div>
+
+  <!-- Social icons -->
+  <div class="item socials">
+    <a href="https://youtube.com/@jstar.animations1" target="_blank" rel="noopener"><img src="yt.png" alt="YouTube"></a>
+    <a href="https://www.roblox.com/users/5133021857/profile" target="_blank" rel="noopener"><img src="rblx.png" alt="Roblox"></a>
+    <a href="https://scratch.mit.edu/users/Damonie01/" target="_blank" rel="noopener"><img src="scrch.png" alt="Scratch"></a>
+  </div>
+
+  <!-- Get Ruffle -->
+  <a class="item ruffle" href="https://ruffle.rs" target="_blank" rel="noopener"><img src="getruffle.png" alt="Get Ruffle"></a>
+
+  <!-- Counter -->
+  <div class="item counter">
     <!-- hitwebcounter Code START -->
     <a href="https://www.hitwebcounter.com/character-counter" target="_blank" rel="noopener" title="Total Characters">
     <img src="https://www.hitwebcounter.com/counter/counter.php?page=21529361&amp;style=0006&amp;nbdigits=5&amp;type=page" alt="Total Characters" decoding="async" style="border:0;max-width:100%;height:auto;" />
@@ -53,7 +248,18 @@
     <a href="https://www.hitwebcounter.com/" target="_blank" rel="noopener" style="font-family:Arial, Helvetica, sans-serif;font-size:10px;color:#636066;text-decoration:underline;font-weight:strong;">PageHits</a>
     <!-- hitwebcounter Code END -->
   </div>
-</footer>
+
+  <!-- Yellow bottom bar -->
+  <div class="bar">
+    <div>Hello! This website is currently under construction, I'll post more updates here, so stay tuned! - Jermonie</div>
+    <div class="copy" id="copyright">&copy;2023-2026 redJSR Incorporated. All rights reserved.</div>
+  </div>
+</div>
+
+<script>
+  document.getElementById("copyright").innerHTML =
+    "&copy;2023-" + new Date().getFullYear() + " redJSR Incorporated. All rights reserved.";
+</script>
 
 <script>
   // Checkerboard of two 64x64 tiles:
@@ -73,7 +279,6 @@
   }
 
   Promise.all([load("jsrtile.png"), load("startile.png")]).then(([jsr, star]) => {
-    // Build one 128x128 block containing all four tiles
     const block = document.createElement("canvas");
     block.width = block.height = TILE * 2;
     const b = block.getContext("2d");
