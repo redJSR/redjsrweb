@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,9 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>waffles r yum</title>
 
-<!-- Website favicon -->
+<!-- Favicon support across browsers -->
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon.png">
-<link rel="apple-touch-icon" sizes="32x32" href="./favicon.png">
+<link rel="icon" type="image/png" href="./favicon.png">
+<link rel="shortcut icon" href="./favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="./favicon.png">
 
 <!-- Ruffle plays buildboardad.swf without Flash -->
 <script>
@@ -241,11 +242,13 @@
   }
 </style>
 </head>
+
 <body>
 
 <div class="wrap">
   <div class="page"></div>
 
+  <!-- Logo and menu -->
   <img class="item logo" src="logo.png" alt="redJSR">
 
   <ul class="item nav">
@@ -259,15 +262,18 @@
     <li><span>Cartoons</span></li>
   </ul>
 
+  <!-- Message -->
   <div class="item message">
     <h1>Welcome to redJSR!</h1>
     <p>This website is still under construction, so some pages and links might not work yet. Thanks for stopping by, and check back soon for new games, comics, and more!</p>
   </div>
 
+  <!-- random.gif -->
   <div class="item gifbox">
     <img src="random.gif" alt="Dancing stickman">
   </div>
 
+  <!-- Billboard -->
   <div class="item billboard">
     <div class="rope l"></div>
     <div class="rope r"></div>
@@ -278,33 +284,40 @@
     </div>
   </div>
 
+  <!-- Social icons -->
   <div class="item socials">
     <a href="https://youtube.com/@jstar.animations1" target="_blank" rel="noopener"><img src="yt.png" alt="YouTube"></a>
     <a href="https://www.roblox.com/users/5133021857/profile" target="_blank" rel="noopener"><img src="rblx.png" alt="Roblox"></a>
     <a href="https://scratch.mit.edu/users/Damonie01/" target="_blank" rel="noopener"><img src="scrch.png" alt="Scratch"></a>
   </div>
 
+  <!-- Get Adobe Flash Player badge -->
   <a class="item getflash" href="https://get.adobe.com/flashplayer" target="_blank" rel="noopener"><img src="getflash.png" alt="Get Adobe Flash Player"></a>
 
+  <!-- Counter -->
   <div class="item counter">
     <a href="https://www.hitwebcounter.com/character-counter" target="_blank" rel="noopener" title="Total Characters">
-      <img src="https://www.hitwebcounter.com/counter/counter.php?page=21529361&amp;style=0006&amp;nbdigits=5&amp;type=page" alt="Total Characters" decoding="async" style="border:0;max-width:100%;height:auto;">
+      <img src="https://www.hitwebcounter.com/counter/counter.php?page=21529361&amp;style=0006&amp;nbdigits=5&amp;type=page" alt="Total Characters" decoding="async" style="border:0;max-width:100%;height:auto;" />
     </a>
-    <br>
+    <br />
     <a href="https://www.hitwebcounter.com/" target="_blank" rel="noopener" style="font-family:Arial, Helvetica, sans-serif;font-size:10px;color:#636066;text-decoration:underline;font-weight:strong;">PageHits</a>
   </div>
 
+  <!-- Copyright -->
   <div class="item copyright" id="copyright">&copy;2023-2026 redJSR Incorporated. All rights reserved.</div>
 
+  <!-- Yellow bottom bar -->
   <div class="bar">Hello! This website is currently under construction, I'll post more updates here, so stay tuned! - Jermonie</div>
 </div>
 
 <script>
+  // Keep the copyright end year current
   document.getElementById("copyright").innerHTML =
     "&copy;2023-" + new Date().getFullYear() + " redJSR Incorporated. All rights reserved.";
 </script>
 
 <script>
+  // Checkerboard of two 64x64 tiles
   const TILE = 64;
 
   function load(src) {
@@ -319,8 +332,10 @@
   Promise.all([load("jsrtile.png"), load("startile.png")]).then(([jsr, star]) => {
     const block = document.createElement("canvas");
     block.width = block.height = TILE * 2;
+
     const b = block.getContext("2d");
     b.imageSmoothingEnabled = false;
+
     b.drawImage(jsr,  0,    0,    TILE, TILE);
     b.drawImage(star, TILE, 0,    TILE, TILE);
     b.drawImage(star, 0,    TILE, TILE, TILE);
