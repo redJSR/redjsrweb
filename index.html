@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>redJSR</title>
+<title>waffles r yum</title>
 
-<!-- Ruffle plays buildboardad1.swf without Flash -->
+<!-- Ruffle plays buildboardad.swf without Flash -->
 <script>
   window.RufflePlayer = window.RufflePlayer || {};
   window.RufflePlayer.config = {
@@ -24,19 +24,15 @@
   }
 
   body {
-    background-color: #888; /* shows only until the tiles finish loading */
+    /* Fallback: plain jsrtile tiling. The script below swaps in the
+       jsrtile/startile checkerboard once both images have loaded. */
+    background-color: #888;
+    background-image: url("jsrtile.png");
+    background-repeat: repeat;
+    image-rendering: pixelated;
     overflow-x: hidden;
     font-family: "Adobe Clean", "Myriad Pro", "Segoe UI", Helvetica, Arial, sans-serif;
     color: #fff;
-  }
-
-  /* Full-screen canvas that holds the checkerboard background */
-  #bg {
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
   }
 
   /* ---------- Page column ---------- */
@@ -107,7 +103,7 @@
   /* ---------- random.gif box ---------- */
   .gifbox {
     left: 32px;
-    bottom: 96px;
+    bottom: 64px;
     width: 250px;
     height: 195px;
     box-sizing: border-box;
@@ -121,19 +117,48 @@
     object-fit: cover;
   }
 
-  /* ---------- Billboard (swf) ---------- */
+  /* ---------- Billboard: swf screen hanging from two ropes ---------- */
   .billboard {
     right: 24px;
     top: 0;
     width: 392px;
-    height: 430px;
+    height: 436px;           /* 120px of rope + 316px screen */
   }
-  .billboard embed,
-  .billboard ruffle-embed,
-  .billboard ruffle-object {
+  .rope {
+    position: absolute;
+    top: 0;
+    width: 4px;
+    height: 120px;
+    background: #fff;
+    border-radius: 2px;
+  }
+  .rope.l { left: 57px; }
+  .rope.r { left: 327px; }
+  .clip {
+    position: absolute;
+    top: 104px;
+    width: 30px;
+    height: 18px;
+    box-sizing: border-box;
+    border: 3px solid #fff;
+    border-radius: 4px 4px 0 0;
+    background: #000;
+  }
+  .clip.l { left: 44px; }
+  .clip.r { left: 314px; }
+  .screen {
+    position: absolute;
+    top: 120px;
+    left: 0;
+    width: 392px;
+    height: 316px;           /* keeps the swf's 1340x1080 shape */
+  }
+  .screen embed,
+  .screen ruffle-embed,
+  .screen ruffle-object {
     display: block;
     width: 392px;
-    height: 430px;
+    height: 316px;
   }
 
   /* ---------- Social icons ---------- */
@@ -153,7 +178,7 @@
   /* ---------- Get Ruffle ---------- */
   .ruffle {
     right: 24px;
-    bottom: 96px;
+    bottom: 88px;
   }
   .ruffle img {
     display: block;
@@ -164,9 +189,18 @@
   /* ---------- Counter ---------- */
   .counter {
     left: 50%;
-    bottom: 88px;
+    bottom: 60px;
     transform: translateX(-50%);
     text-align: center;
+  }
+
+  /* ---------- Copyright (bottom right, just above the yellow bar) ---------- */
+  .copyright {
+    right: 24px;
+    bottom: 60px;
+    font-size: 12px;
+    text-align: right;
+    color: #fff;
   }
 
   /* ---------- Yellow bottom bar ---------- */
@@ -185,16 +219,9 @@
     font-size: 15px;
     line-height: 1.3;
   }
-  .bar .copy {
-    margin-top: 6px;
-    font-size: 12px;
-    color: #444;
-  }
 </style>
 </head>
 <body>
-
-<canvas id="bg"></canvas>
 
 <div class="wrap">
   <div class="page"></div>
@@ -223,9 +250,15 @@
     <img src="random.gif" alt="Dancing stickman">
   </div>
 
-  <!-- Billboard -->
+  <!-- Billboard: two ropes with clips, swf screen hanging from them -->
   <div class="item billboard">
-    <embed src="buildboardad1.swf" width="392" height="430" type="application/x-shockwave-flash">
+    <div class="rope l"></div>
+    <div class="rope r"></div>
+    <div class="clip l"></div>
+    <div class="clip r"></div>
+    <div class="screen">
+      <embed src="buildboardad.swf" width="392" height="316" type="application/x-shockwave-flash">
+    </div>
   </div>
 
   <!-- Social icons -->
@@ -249,14 +282,15 @@
     <!-- hitwebcounter Code END -->
   </div>
 
+  <!-- Copyright -->
+  <div class="item copyright" id="copyright">&copy;2023-2026 redJSR Incorporated. All rights reserved.</div>
+
   <!-- Yellow bottom bar -->
-  <div class="bar">
-    <div>Hello! This website is currently under construction, I'll post more updates here, so stay tuned! - Jermonie</div>
-    <div class="copy" id="copyright">&copy;2023-2026 redJSR Incorporated. All rights reserved.</div>
-  </div>
+  <div class="bar">Hello! This website is currently under construction, I'll post more updates here, so stay tuned! - Jermonie</div>
 </div>
 
 <script>
+  // Keep the copyright end year current
   document.getElementById("copyright").innerHTML =
     "&copy;2023-" + new Date().getFullYear() + " redJSR Incorporated. All rights reserved.";
 </script>
@@ -265,9 +299,9 @@
   // Checkerboard of two 64x64 tiles:
   //   jsrtile  | startile
   //   startile | jsrtile
+  // The 2x2 block is built once and handed to CSS as a background image,
+  // so the browser scales it evenly at any zoom level.
   const TILE = 64;
-  const canvas = document.getElementById("bg");
-  const ctx = canvas.getContext("2d");
 
   function load(src) {
     return new Promise((resolve, reject) => {
@@ -282,24 +316,17 @@
     const block = document.createElement("canvas");
     block.width = block.height = TILE * 2;
     const b = block.getContext("2d");
+    b.imageSmoothingEnabled = false;
     b.drawImage(jsr,  0,    0,    TILE, TILE);
     b.drawImage(star, TILE, 0,    TILE, TILE);
     b.drawImage(star, 0,    TILE, TILE, TILE);
     b.drawImage(jsr,  TILE, TILE, TILE, TILE);
 
-    function paint() {
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width  = Math.ceil(window.innerWidth  * dpr);
-      canvas.height = Math.ceil(window.innerHeight * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.imageSmoothingEnabled = false;
-      ctx.fillStyle = ctx.createPattern(block, "repeat");
-      ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-    }
-
-    paint();
-    window.addEventListener("resize", paint);
-  }).catch(err => console.error(err));
+    const style = document.body.style;
+    style.backgroundImage = "url(" + block.toDataURL("image/png") + ")";
+    style.backgroundSize = (TILE * 2) + "px " + (TILE * 2) + "px";
+    style.backgroundRepeat = "repeat";
+  }).catch(err => console.error(err)); // on failure the plain jsrtile background stays
 </script>
 
 </body>
