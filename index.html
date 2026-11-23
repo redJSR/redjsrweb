@@ -18,6 +18,25 @@
 <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
 
 <style>
+  /* Custom font. Put the two .ttf files in a "fonts" folder next to index.html
+     (or directly next to it - both locations work). */
+  @font-face {
+    font-family: "MyRandomFont";
+    src: url("fonts/myrandomfontclean.ttf") format("truetype"),
+         url("myrandomfontclean.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "MyRandomFont";
+    src: url("fonts/myrandomfontregular.ttf") format("truetype"),
+         url("myrandomfontregular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
   html, body {
     margin: 0;
     padding: 0;
@@ -31,7 +50,7 @@
     background-repeat: repeat;
     image-rendering: pixelated;
     overflow-x: hidden;
-    font-family: "Adobe Clean", "Myriad Pro", "Segoe UI", Helvetica, Arial, sans-serif;
+    font-family: "MyRandomFont", "Segoe UI", Helvetica, Arial, sans-serif;
     color: #fff;
   }
 
@@ -41,7 +60,7 @@
     width: 1000px;
     max-width: 100%;
     margin: 0 auto;
-    min-height: max(100vh, 960px);
+    height: 960px; /* fixed height: does not grow when the browser zooms out */
   }
 
   .page {
