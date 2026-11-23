@@ -1,9 +1,14 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>waffles r yum</title>
+
+<!-- Website favicon -->
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon.png">
+<link rel="apple-touch-icon" sizes="32x32" href="./favicon.png">
 
 <!-- Ruffle plays buildboardad.swf without Flash -->
 <script>
@@ -18,8 +23,6 @@
 <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
 
 <style>
-  /* Custom font. Put the two .ttf files in a "fonts" folder next to index.html
-     (or directly next to it - both locations work). */
   @font-face {
     font-family: "MyRandomFont";
     src: url("fonts/myrandomfontclean.ttf") format("truetype"),
@@ -43,8 +46,6 @@
   }
 
   body {
-    /* Fallback: plain jsrtile tiling. The script below swaps in the
-       jsrtile/startile checkerboard once both images have loaded. */
     background-color: #888;
     background-image: url("jsrtile.png");
     background-repeat: repeat;
@@ -54,13 +55,12 @@
     color: #fff;
   }
 
-  /* ---------- Page column ---------- */
   .wrap {
     position: relative;
     width: 1000px;
     max-width: 100%;
     margin: 0 auto;
-    height: 960px; /* fixed height: does not grow when the browser zooms out */
+    height: 960px;
   }
 
   .page {
@@ -74,7 +74,6 @@
     z-index: 2;
   }
 
-  /* ---------- Logo + menu ---------- */
   .logo {
     left: 32px;
     top: 10px;
@@ -92,15 +91,16 @@
     font-weight: 300;
     line-height: 35px;
   }
+
   .nav a, .nav span {
     color: #fff;
     text-decoration: none;
   }
+
   .nav a:hover {
     text-decoration: underline;
   }
 
-  /* ---------- Message ---------- */
   .message {
     left: 32px;
     top: 440px;
@@ -109,17 +109,18 @@
     line-height: 1.35;
     font-weight: 300;
   }
+
   .message h1 {
     margin: 0 0 10px;
     font-size: 36px;
     line-height: 1.15;
     font-weight: 400;
   }
+
   .message p {
     margin: 0;
   }
 
-  /* ---------- random.gif box ---------- */
   .gifbox {
     left: 32px;
     bottom: 64px;
@@ -127,20 +128,21 @@
     border: 4px solid #fff;
     background: #000;
   }
+
   .gifbox img {
     display: block;
-    width: 170px;                /* gif is 915x1080, so the whole image shows, uncropped */
+    width: 170px;
     height: auto;
     aspect-ratio: 915 / 1080;
   }
 
-  /* ---------- Billboard: swf screen hanging from two ropes ---------- */
   .billboard {
     right: 24px;
     top: 0;
     width: 392px;
-    height: 436px;           /* 120px of rope + 316px screen */
+    height: 436px;
   }
+
   .rope {
     position: absolute;
     top: 0;
@@ -149,8 +151,10 @@
     background: #fff;
     border-radius: 2px;
   }
+
   .rope.l { left: 57px; }
   .rope.r { left: 327px; }
+
   .clip {
     position: absolute;
     top: 104px;
@@ -161,15 +165,18 @@
     border-radius: 4px 4px 0 0;
     background: #000;
   }
+
   .clip.l { left: 44px; }
   .clip.r { left: 314px; }
+
   .screen {
     position: absolute;
     top: 120px;
     left: 0;
     width: 392px;
-    height: 316px;           /* keeps the swf's 1340x1080 shape */
+    height: 316px;
   }
+
   .screen embed,
   .screen ruffle-embed,
   .screen ruffle-object {
@@ -178,7 +185,6 @@
     height: 316px;
   }
 
-  /* ---------- Social icons ---------- */
   .socials {
     right: 28px;
     top: 525px;
@@ -186,24 +192,24 @@
     flex-direction: column;
     gap: 8px;
   }
+
   .socials img {
     display: block;
     width: 54px;
     height: auto;
   }
 
-  /* ---------- Get Flash badge ---------- */
   .getflash {
     right: 24px;
     bottom: 88px;
   }
+
   .getflash img {
     display: block;
     width: 160px;
     height: auto;
   }
 
-  /* ---------- Counter ---------- */
   .counter {
     left: 50%;
     bottom: 60px;
@@ -211,7 +217,6 @@
     text-align: center;
   }
 
-  /* ---------- Copyright (bottom right, just above the yellow bar) ---------- */
   .copyright {
     right: 24px;
     bottom: 60px;
@@ -220,7 +225,6 @@
     color: #fff;
   }
 
-  /* ---------- Yellow bottom bar ---------- */
   .bar {
     position: absolute;
     z-index: 3;
@@ -242,8 +246,8 @@
 <div class="wrap">
   <div class="page"></div>
 
-  <!-- Logo and menu -->
   <img class="item logo" src="logo.png" alt="redJSR">
+
   <ul class="item nav">
     <li><a href="index.html">Home</a></li>
     <li><span>Games</span></li>
@@ -255,18 +259,15 @@
     <li><span>Cartoons</span></li>
   </ul>
 
-  <!-- Message -->
   <div class="item message">
     <h1>Welcome to redJSR!</h1>
     <p>This website is still under construction, so some pages and links might not work yet. Thanks for stopping by, and check back soon for new games, comics, and more!</p>
   </div>
 
-  <!-- random.gif -->
   <div class="item gifbox">
     <img src="random.gif" alt="Dancing stickman">
   </div>
 
-  <!-- Billboard: two ropes with clips, swf screen hanging from them -->
   <div class="item billboard">
     <div class="rope l"></div>
     <div class="rope r"></div>
@@ -277,46 +278,33 @@
     </div>
   </div>
 
-  <!-- Social icons -->
   <div class="item socials">
     <a href="https://youtube.com/@jstar.animations1" target="_blank" rel="noopener"><img src="yt.png" alt="YouTube"></a>
     <a href="https://www.roblox.com/users/5133021857/profile" target="_blank" rel="noopener"><img src="rblx.png" alt="Roblox"></a>
     <a href="https://scratch.mit.edu/users/Damonie01/" target="_blank" rel="noopener"><img src="scrch.png" alt="Scratch"></a>
   </div>
 
-  <!-- Get Adobe Flash Player badge -->
   <a class="item getflash" href="https://get.adobe.com/flashplayer" target="_blank" rel="noopener"><img src="getflash.png" alt="Get Adobe Flash Player"></a>
 
-  <!-- Counter -->
   <div class="item counter">
-    <!-- hitwebcounter Code START -->
     <a href="https://www.hitwebcounter.com/character-counter" target="_blank" rel="noopener" title="Total Characters">
-    <img src="https://www.hitwebcounter.com/counter/counter.php?page=21529361&amp;style=0006&amp;nbdigits=5&amp;type=page" alt="Total Characters" decoding="async" style="border:0;max-width:100%;height:auto;" />
+      <img src="https://www.hitwebcounter.com/counter/counter.php?page=21529361&amp;style=0006&amp;nbdigits=5&amp;type=page" alt="Total Characters" decoding="async" style="border:0;max-width:100%;height:auto;">
     </a>
-    <br />
+    <br>
     <a href="https://www.hitwebcounter.com/" target="_blank" rel="noopener" style="font-family:Arial, Helvetica, sans-serif;font-size:10px;color:#636066;text-decoration:underline;font-weight:strong;">PageHits</a>
-    <!-- hitwebcounter Code END -->
   </div>
 
-  <!-- Copyright -->
   <div class="item copyright" id="copyright">&copy;2023-2026 redJSR Incorporated. All rights reserved.</div>
 
-  <!-- Yellow bottom bar -->
   <div class="bar">Hello! This website is currently under construction, I'll post more updates here, so stay tuned! - Jermonie</div>
 </div>
 
 <script>
-  // Keep the copyright end year current
   document.getElementById("copyright").innerHTML =
     "&copy;2023-" + new Date().getFullYear() + " redJSR Incorporated. All rights reserved.";
 </script>
 
 <script>
-  // Checkerboard of two 64x64 tiles:
-  //   jsrtile  | startile
-  //   startile | jsrtile
-  // The 2x2 block is built once and handed to CSS as a background image,
-  // so the browser scales it evenly at any zoom level.
   const TILE = 64;
 
   function load(src) {
@@ -342,7 +330,7 @@
     style.backgroundImage = "url(" + block.toDataURL("image/png") + ")";
     style.backgroundSize = (TILE * 2) + "px " + (TILE * 2) + "px";
     style.backgroundRepeat = "repeat";
-  }).catch(err => console.error(err)); // on failure the plain jsrtile background stays
+  }).catch(err => console.error(err));
 </script>
 
 </body>
