@@ -142,6 +142,120 @@
     max-height: 200px;
   }
 
+  /* ---------- Radio (right of the gif box): icon, buttons, song link panel ---------- */
+  .radio {
+    left: 280px;
+    bottom: 64px;
+    width: 110px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .radio-btn {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    line-height: 0;
+  }
+  .radio-btn img {
+    display: block;
+    width: 90px;
+    height: auto;
+  }
+  .radio.on .radio-btn img {
+    animation: bob 0.7s ease-in-out infinite alternate;
+  }
+  @keyframes bob {
+    from { transform: rotate(-3deg); }
+    to   { transform: rotate(3deg); }
+  }
+  .radio-controls {
+    display: flex;
+    gap: 6px;
+  }
+  .radio-controls button {
+    margin: 0;
+    padding: 4px 8px;
+    border: 0;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .radio-controls button:active {
+    background: #ddd;
+  }
+  .radio-panel {
+    display: none;
+    position: absolute;
+    left: calc(100% + 12px);
+    bottom: 0;
+    width: 270px;
+    box-sizing: border-box;
+    padding: 12px;
+    border-radius: 10px;
+    background: #fff;
+    color: #000;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    line-height: 1.3;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  }
+  .radio.open .radio-panel {
+    display: block;
+  }
+  .radio-panel label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+  }
+  .radio-panel input {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+    padding: 6px 8px;
+    border: 1px solid #888;
+    border-radius: 6px;
+    font-size: 16px; /* 16px stops iPad/iPhone from zooming in on focus */
+  }
+  .radio-panel .row {
+    display: flex;
+    gap: 6px;
+  }
+  .radio-panel .row button {
+    padding: 6px 10px;
+    border: 0;
+    border-radius: 6px;
+    background: #0F9FFF;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .radio-panel .row button.alt {
+    background: #ddd;
+    color: #000;
+  }
+  .radio-status {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #333;
+    word-wrap: break-word;
+  }
+  /* The YouTube player lives off-screen: only the sound is used. */
+  #ytwrap {
+    position: fixed;
+    left: -1000px;
+    top: 0;
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+  }
+
   /* ---------- Billboard: swf screen hanging from two ropes ---------- */
   .billboard {
     right: 24px;
@@ -351,6 +465,25 @@
     </div>
   </div>
 
+  <!-- Radio: icon (click to pick a song), play / pause / stop buttons under it -->
+  <div class="item radio" id="radio">
+    <button class="radio-btn" id="radioIcon" type="button" aria-label="Choose a song" title="Click to choose a song"><img src="radio.png" alt="Radio"></button>
+    <div class="radio-controls">
+      <button type="button" id="rPlay" aria-label="Play" title="Play">&#9654;&#65039;</button>
+      <button type="button" id="rPause" aria-label="Pause" title="Pause">&#9208;&#65039;</button>
+      <button type="button" id="rStop" aria-label="Stop" title="Stop">&#9209;&#65039;</button>
+    </div>
+    <div class="radio-panel" id="radioPanel">
+      <label for="radioLink">Paste a YouTube link:</label>
+      <input id="radioLink" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://youtu.be/…">
+      <div class="row">
+        <button type="button" id="rSet">Set song</button>
+        <button type="button" id="rDefault" class="alt">Default song</button>
+      </div>
+      <div class="radio-status" id="radioStatus">Press ▶️ to play. The song loops until you change it.</div>
+    </div>
+  </div>
+
   <!-- Billboard: two ropes with clips, swf screen hanging from them -->
   <div class="item billboard">
     <div class="rope l"></div>
@@ -446,6 +579,141 @@
     }
   })();
 </script>
+
+<!-- Hidden YouTube player for the radio -->
+<div id="ytwrap"><div id="ytplayer"></div></div>
+
+<script>
+  // Radio: plays a YouTube song on loop. Default: It’s Raining Tacos on Christmas Eve (Parry Gripp).
+  // Browsers only allow sound after a tap, so the music starts when a visitor presses ▶️.
+  (function () {
+    var DEFAULT_ID = "xwIHONgzq-w";
+    var KEY = "redjsr-radio-song";
+    var player = null, ready = false, wantPlay = false;
+
+    var radio = document.getElementById("radio");
+    var input = document.getElementById("radioLink");
+    var statusEl = document.getElementById("radioStatus");
+
+    function say(t) { statusEl.textContent = t; }
+
+    function savedId() {
+      try {
+        var v = localStorage.getItem(KEY);
+        if (v && /^[\w-]{11}$/.test(v)) return v;
+      } catch (e) {}
+      return DEFAULT_ID;
+    }
+    function saveId(id) {
+      try {
+        if (id === DEFAULT_ID) localStorage.removeItem(KEY);
+        else localStorage.setItem(KEY, id);
+      } catch (e) {}
+    }
+
+    // Accepts youtu.be, youtube.com/watch?v=, /shorts/, /embed/, /live/, music.youtube.com, or a bare 11-character ID.
+    function parseId(text) {
+      text = (text || "").trim();
+      if (/^[\w-]{11}$/.test(text)) return text;
+      var u;
+      try { u = new URL(text); }
+      catch (e) { try { u = new URL("https://" + text); } catch (e2) { return null; } }
+      var host = u.hostname.replace(/^(www|m|music)\./, "");
+      var id = null;
+      if (host === "youtu.be") {
+        id = u.pathname.split("/")[1];
+      } else if (host === "youtube.com" || host === "youtube-nocookie.com") {
+        if (u.pathname === "/watch") id = u.searchParams.get("v");
+        else {
+          var m = u.pathname.match(/^\/(?:shorts|embed|live|v)\/([\w-]{11})/);
+          if (m) id = m[1];
+        }
+      }
+      return id && /^[\w-]{11}$/.test(id) ? id : null;
+    }
+
+    var startId = savedId();
+
+    window.onYouTubeIframeAPIReady = function () {
+      player = new YT.Player("ytplayer", {
+        width: "200",
+        height: "200",
+        videoId: startId,
+        playerVars: { playsinline: 1, controls: 0, rel: 0, loop: 1, playlist: startId },
+        events: { onReady: onReady, onStateChange: onState, onError: onError }
+      });
+    };
+
+    function showTitle() {
+      try {
+        var d = player.getVideoData();
+        if (d && d.title) say("Loaded: " + d.title);
+      } catch (e) {}
+    }
+    function onReady() {
+      ready = true;
+      showTitle();
+      if (wantPlay) player.playVideo();
+    }
+    function onState(e) {
+      if (e.data === YT.PlayerState.ENDED) {   // backup loop
+        player.seekTo(0, true);
+        player.playVideo();
+      }
+      radio.classList.toggle("on", e.data === YT.PlayerState.PLAYING);
+      if (e.data === YT.PlayerState.PLAYING || e.data === YT.PlayerState.CUED) showTitle();
+    }
+    function onError() {
+      wantPlay = false;
+      radio.classList.remove("on");
+      say("Couldn’t play that video (it may not allow embedding). Try another link.");
+    }
+
+    function setSong(id) {
+      if (!ready) { say("The player is still loading, try again in a moment."); return; }
+      saveId(id);
+      wantPlay = true;
+      player.loadPlaylist([id]);
+      player.setLoop(true);
+    }
+
+    document.getElementById("rPlay").addEventListener("click", function () {
+      wantPlay = true;
+      if (ready) player.playVideo(); else say("Loading the player…");
+    });
+    document.getElementById("rPause").addEventListener("click", function () {
+      wantPlay = false;
+      if (ready) player.pauseVideo();
+    });
+    document.getElementById("rStop").addEventListener("click", function () {
+      wantPlay = false;
+      if (ready) { player.pauseVideo(); player.seekTo(0, true); }
+      radio.classList.remove("on");
+    });
+
+    document.getElementById("radioIcon").addEventListener("click", function () {
+      radio.classList.toggle("open");
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") radio.classList.remove("open");
+    });
+
+    function submitLink() {
+      var id = parseId(input.value);
+      if (!id) { say("That doesn’t look like a YouTube link."); return; }
+      setSong(id);
+    }
+    document.getElementById("rSet").addEventListener("click", submitLink);
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") submitLink();
+    });
+    document.getElementById("rDefault").addEventListener("click", function () {
+      input.value = "";
+      setSong(DEFAULT_ID);
+    });
+  })();
+</script>
+<script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
   // Checkerboard of two 64x64 tiles:
