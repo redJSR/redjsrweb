@@ -146,7 +146,7 @@
   .radio {
     left: 280px;
     bottom: 64px;
-    width: 110px;
+    width: 180px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -162,7 +162,7 @@
   }
   .radio-btn img {
     display: block;
-    width: 90px;
+    width: 170px;
     height: auto;
   }
   .radio.on .radio-btn img {
@@ -178,13 +178,38 @@
   }
   .radio-controls button {
     margin: 0;
-    padding: 4px 8px;
+    padding: 0;
+    width: 46px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: 0;
     border-radius: 8px;
     background: #fff;
-    font-size: 18px;
-    line-height: 1;
     cursor: pointer;
+  }
+  /* The three symbols are drawn with CSS so they are always the same size on every device */
+  .ic { display: block; }
+  .ic.play {
+    width: 0;
+    height: 0;
+    margin-left: 3px;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 14px solid #000;
+  }
+  .ic.pause {
+    box-sizing: border-box;
+    width: 14px;
+    height: 16px;
+    border-left: 5px solid #000;
+    border-right: 5px solid #000;
+  }
+  .ic.stop {
+    width: 14px;
+    height: 14px;
+    background: #000;
   }
   .radio-controls button:active {
     background: #ddd;
@@ -469,9 +494,9 @@
   <div class="item radio" id="radio">
     <button class="radio-btn" id="radioIcon" type="button" aria-label="Choose a song" title="Click to choose a song"><img src="radio.png" alt="Radio"></button>
     <div class="radio-controls">
-      <button type="button" id="rPlay" aria-label="Play" title="Play">&#9654;&#65039;</button>
-      <button type="button" id="rPause" aria-label="Pause" title="Pause">&#9208;&#65039;</button>
-      <button type="button" id="rStop" aria-label="Stop" title="Stop">&#9209;&#65039;</button>
+      <button type="button" id="rPlay" aria-label="Play" title="Play"><span class="ic play"></span></button>
+      <button type="button" id="rPause" aria-label="Pause" title="Pause"><span class="ic pause"></span></button>
+      <button type="button" id="rStop" aria-label="Stop" title="Stop"><span class="ic stop"></span></button>
     </div>
     <div class="radio-panel" id="radioPanel">
       <label for="radioLink">Paste a YouTube link:</label>
@@ -480,7 +505,7 @@
         <button type="button" id="rSet">Set song</button>
         <button type="button" id="rDefault" class="alt">Default song</button>
       </div>
-      <div class="radio-status" id="radioStatus">Press ▶️ to play. The song loops until you change it.</div>
+      <div class="radio-status" id="radioStatus">Press ▶︎ to play. The song loops until you change it.</div>
     </div>
   </div>
 
@@ -585,7 +610,7 @@
 
 <script>
   // Radio: plays a YouTube song on loop. Default: It’s Raining Tacos on Christmas Eve (Parry Gripp).
-  // Browsers only allow sound after a tap, so the music starts when a visitor presses ▶️.
+  // Browsers only allow sound after a tap, so the music starts when a visitor presses ▶︎.
   (function () {
     var DEFAULT_ID = "xwIHONgzq-w";
     var KEY = "redjsr-radio-song";
