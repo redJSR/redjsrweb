@@ -70,7 +70,7 @@
   .page {
     position: absolute;
     inset: 0;
-    background: #000;
+    background: #0b2a6f;
   }
 
   .wrap > .item {
@@ -129,7 +129,7 @@
     bottom: 64px;
     box-sizing: border-box;
     border: 4px solid #fff;
-    background: #000;
+    background: #0b2a6f;
   }
   .gifbox img {
     display: block;
@@ -167,7 +167,7 @@
     box-sizing: border-box;
     border: 3px solid #fff;
     border-radius: 4px 4px 0 0;
-    background: #000;
+    background: #0b2a6f;
   }
   .clip.l { left: 44px; }
   .clip.r { left: 314px; }
@@ -282,9 +282,7 @@
   .drift {
     position: absolute;
     z-index: 4;
-    left: 50%;
-    width: 100vw;
-    transform: translateX(-50%);
+    width: 50vw;
     bottom: 44px;
     height: 34px;
     pointer-events: none;
@@ -293,6 +291,9 @@
       radial-gradient(circle at 22px 34px, #fff 21px, transparent 22px) 0 0 / 90px 34px repeat-x,
       radial-gradient(circle at 66px 34px, #fff 15px, transparent 16px) 0 0 / 90px 34px repeat-x;
   }
+
+  .drift.l { right: 100%; }
+  .drift.r { left: 100%; }
 
   /* ---------- Falling snow ---------- */
   .flakes {
@@ -315,11 +316,6 @@
     to   { transform: translate3d(var(--dx, 0px), 110vh, 0); }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .flakes { display: none; }
-    .ticker { animation: none; }
-    .bar { overflow-x: auto; }
-  }
 </style>
 </head>
 <body>
@@ -405,14 +401,6 @@
   <!-- Copyright -->
   <div class="item copyright" id="copyright">&copy;2023-2026 redJSR Incorporated. All rights reserved.</div>
 
-  <!-- Snow: top of the logo -->
-  <div class="snow" style="left:22px; top:2px;">
-    <i style="left:0; top:8px; width:70px; height:16px;"></i>
-    <i style="left:10px; top:0; width:30px; height:16px;"></i>
-    <i style="left:46px; top:3px; width:22px; height:14px;"></i>
-    <i style="left:6px; top:18px; width:10px; height:34px;"></i>
-  </div>
-
   <!-- Snow: long drip down the top-right edge of the column -->
   <div class="snow" style="right:-4px; top:0; width:70px; height:400px;">
     <i style="left:0; top:0; width:70px; height:26px;"></i>
@@ -420,8 +408,9 @@
     <i style="left:42px; top:10px; width:18px; height:360px;"></i>
   </div>
 
-  <!-- Snow: wavy drift above the bar, running past the column -->
-  <div class="drift"></div>
+  <!-- Snow: wavy drift on the checkerboard on both sides of the column (not over the blue part) -->
+  <div class="drift l"></div>
+  <div class="drift r"></div>
 
   <!-- Announcements bar: scrolls. Two identical copies make the loop seamless. -->
   <div class="bar">
