@@ -9,7 +9,7 @@
 <link rel="shortcut icon" href="favicon.ico">
 <link rel="apple-touch-icon" href="favicon.png">
 
-<!-- Ruffle plays buildboardad.swf without Flash -->
+<!-- Ruffle plays buildboardad2.swf without Flash -->
 <script>
   window.RufflePlayer = window.RufflePlayer || {};
   window.RufflePlayer.config = {
@@ -47,10 +47,10 @@
   }
 
   body {
-    /* Fallback: plain jsrtile tiling. The script below swaps in the
-       jsrtile/startile checkerboard once both images have loaded. */
+    /* Fallback: plain jsrtile2 tiling. The script below swaps in the
+       jsrtile2/poptile2 checkerboard once both images have loaded. */
     background-color: #888;
-    background-image: url("jsrtile.png");
+    background-image: url("jsrtile2.png");
     background-repeat: repeat;
     image-rendering: pixelated;
     overflow-x: hidden;
@@ -203,7 +203,7 @@
   /* ---------- Get Flash badge ---------- */
   .getflash {
     right: 24px;
-    bottom: 88px;
+    bottom: 100px;
   }
   .getflash img {
     display: block;
@@ -214,34 +214,111 @@
   /* ---------- Counter ---------- */
   .counter {
     left: 50%;
-    bottom: 60px;
+    bottom: 78px;
     transform: translateX(-50%);
     text-align: center;
   }
 
-  /* ---------- Copyright (bottom right, just above the yellow bar) ---------- */
+  /* ---------- Copyright (bottom right, just above the snow and the bar) ---------- */
   .copyright {
     right: 24px;
-    bottom: 60px;
+    bottom: 76px;
     font-size: 12px;
     text-align: right;
     color: #fff;
   }
 
-  /* ---------- Yellow bottom bar ---------- */
+  /* ---------- Announcements bar (scrolls) ---------- */
   .bar {
     position: absolute;
     z-index: 3;
     left: 0;
     right: 0;
     bottom: 0;
+    height: 44px;
     box-sizing: border-box;
-    padding: 12px 24px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
     background: #f6f6c8;
     color: #000;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 15px;
-    line-height: 1.3;
+    line-height: 20px;
+  }
+  .ticker {
+    display: flex;
+    width: max-content;
+    animation: ticker 60s linear infinite;
+  }
+  .bar:hover .ticker {
+    animation-play-state: paused;
+  }
+  .ticker span {
+    flex: none;
+    white-space: nowrap;
+    padding-right: 90px;
+  }
+  /* Two identical copies sit side by side; sliding by half loops seamlessly. */
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ---------- Snow on the page (all CSS shapes) ---------- */
+  .snow {
+    position: absolute;
+    z-index: 5;
+    pointer-events: none;
+  }
+  .snow i {
+    position: absolute;
+    display: block;
+    background: #fff;
+    border-radius: 999px;
+  }
+
+  /* Wavy snow drift across the full width, sitting on top of the bar */
+  .drift {
+    position: absolute;
+    z-index: 4;
+    left: 50%;
+    width: 100vw;
+    transform: translateX(-50%);
+    bottom: 44px;
+    height: 34px;
+    pointer-events: none;
+    background:
+      linear-gradient(#fff, #fff) 0 100% / 100% 12px no-repeat,
+      radial-gradient(circle at 22px 34px, #fff 21px, transparent 22px) 0 0 / 90px 34px repeat-x,
+      radial-gradient(circle at 66px 34px, #fff 15px, transparent 16px) 0 0 / 90px 34px repeat-x;
+  }
+
+  /* ---------- Falling snow ---------- */
+  .flakes {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .flake {
+    position: absolute;
+    top: -12px;
+    border-radius: 50%;
+    background: #fff;
+    animation: fall linear infinite;
+    will-change: transform;
+  }
+  @keyframes fall {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(var(--dx, 0px), 110vh, 0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flakes { display: none; }
+    .ticker { animation: none; }
+    .bar { overflow-x: auto; }
   }
 </style>
 </head>
@@ -266,12 +343,18 @@
   <!-- Message -->
   <div class="item message">
     <h1>Welcome to redJSR!</h1>
-    <p>This website is still under construction, so some pages and links might not work yet. Thanks for stopping by, and check back soon for new games, comics, and more!</p>
+    <p>Hello! I am Jermonie “redJSR” Bailey! This site is where I post my creations, announcements will be here, I am currently preparing for the release of TIAOJ. So stay tuned!</p>
   </div>
 
   <!-- random.gif -->
   <div class="item gifbox">
     <img src="random.gif" alt="Dancing stickman">
+    <!-- snow on the top-left corner -->
+    <div class="snow" style="left:-10px; top:-14px;">
+      <i style="left:0; top:6px; width:62px; height:16px;"></i>
+      <i style="left:8px; top:0; width:28px; height:16px;"></i>
+      <i style="left:6px; top:14px; width:9px; height:26px;"></i>
+    </div>
   </div>
 
   <!-- Billboard: two ropes with clips, swf screen hanging from them -->
@@ -281,7 +364,20 @@
     <div class="clip l"></div>
     <div class="clip r"></div>
     <div class="screen">
-      <embed src="buildboardad.swf" width="392" height="316" type="application/x-shockwave-flash">
+      <embed src="buildboardad2.swf" width="392" height="316" type="application/x-shockwave-flash">
+    </div>
+    <!-- snow on the top-left corner of the screen -->
+    <div class="snow" style="left:-8px; top:112px;">
+      <i style="left:0; top:8px; width:100px; height:18px;"></i>
+      <i style="left:10px; top:0; width:38px; height:18px;"></i>
+      <i style="left:58px; top:3px; width:26px; height:16px;"></i>
+      <i style="left:4px; top:20px; width:10px; height:22px;"></i>
+    </div>
+    <!-- snow drip hanging under the bottom-left corner -->
+    <div class="snow" style="left:-6px; top:424px;">
+      <i style="left:0; top:0; width:64px; height:16px;"></i>
+      <i style="left:12px; top:8px; width:20px; height:62px;"></i>
+      <i style="left:40px; top:10px; width:10px; height:24px;"></i>
     </div>
   </div>
 
@@ -309,9 +405,35 @@
   <!-- Copyright -->
   <div class="item copyright" id="copyright">&copy;2023-2026 redJSR Incorporated. All rights reserved.</div>
 
-  <!-- Yellow bottom bar -->
-  <div class="bar">Hello! This website is currently under construction, I'll post more updates here, so stay tuned! - Jermonie</div>
+  <!-- Snow: top of the logo -->
+  <div class="snow" style="left:22px; top:2px;">
+    <i style="left:0; top:8px; width:70px; height:16px;"></i>
+    <i style="left:10px; top:0; width:30px; height:16px;"></i>
+    <i style="left:46px; top:3px; width:22px; height:14px;"></i>
+    <i style="left:6px; top:18px; width:10px; height:34px;"></i>
+  </div>
+
+  <!-- Snow: long drip down the top-right edge of the column -->
+  <div class="snow" style="right:-4px; top:0; width:70px; height:400px;">
+    <i style="left:0; top:0; width:70px; height:26px;"></i>
+    <i style="left:20px; top:12px; width:12px; height:130px;"></i>
+    <i style="left:42px; top:10px; width:18px; height:360px;"></i>
+  </div>
+
+  <!-- Snow: wavy drift above the bar, running past the column -->
+  <div class="drift"></div>
+
+  <!-- Announcements bar: scrolls. Two identical copies make the loop seamless. -->
+  <div class="bar">
+    <div class="ticker">
+      <span>Hello! Announcements will be posted here. &bull; The Incredible Adventures of Jstar (TIAOJ) is releasing in December-January! &bull; The old redJSR wiki is being retired and is moving fully into this website. &bull; The site has a Christmas theme for the season. &bull; Stay tuned! - Jermonie</span>
+      <span aria-hidden="true">Hello! Announcements will be posted here. &bull; The Incredible Adventures of Jstar (TIAOJ) is releasing in December-January! &bull; The old redJSR wiki is being retired and is moving fully into this website. &bull; The site has a Christmas theme for the season. &bull; Stay tuned! - Jermonie</span>
+    </div>
+  </div>
 </div>
+
+<!-- Falling snow (tiny white balls), filled in by the script below -->
+<div class="flakes" id="flakes" aria-hidden="true"></div>
 
 <script>
   // Keep the copyright end year current
@@ -320,9 +442,29 @@
 </script>
 
 <script>
+  // Falling snow: tiny white balls drifting down from the top of the screen.
+  (function () {
+    const box = document.getElementById("flakes");
+    const COUNT = 70;
+    for (let i = 0; i < COUNT; i++) {
+      const f = document.createElement("div");
+      f.className = "flake";
+      const size = 2 + Math.random() * 3;            // 2-5px
+      f.style.width = f.style.height = size + "px";
+      f.style.left = (Math.random() * 100) + "%";
+      f.style.opacity = (0.5 + Math.random() * 0.5).toFixed(2);
+      f.style.setProperty("--dx", (Math.random() * 80 - 40).toFixed(0) + "px");
+      f.style.animationDuration = (8 + Math.random() * 10).toFixed(1) + "s";
+      f.style.animationDelay = (-Math.random() * 18).toFixed(1) + "s"; // already mid-fall on load
+      box.appendChild(f);
+    }
+  })();
+</script>
+
+<script>
   // Checkerboard of two 64x64 tiles:
-  //   jsrtile  | startile
-  //   startile | jsrtile
+  //   jsrtile2 | poptile2
+  //   poptile2 | jsrtile2
   // The 2x2 block is built once and handed to CSS as a background image,
   // so the browser scales it evenly at any zoom level.
   const TILE = 64;
@@ -336,21 +478,21 @@
     });
   }
 
-  Promise.all([load("jsrtile.png"), load("startile.png")]).then(([jsr, star]) => {
+  Promise.all([load("jsrtile2.png"), load("poptile2.png")]).then(([jsr, pop]) => {
     const block = document.createElement("canvas");
     block.width = block.height = TILE * 2;
     const b = block.getContext("2d");
     b.imageSmoothingEnabled = false;
-    b.drawImage(jsr,  0,    0,    TILE, TILE);
-    b.drawImage(star, TILE, 0,    TILE, TILE);
-    b.drawImage(star, 0,    TILE, TILE, TILE);
-    b.drawImage(jsr,  TILE, TILE, TILE, TILE);
+    b.drawImage(jsr, 0,    0,    TILE, TILE);
+    b.drawImage(pop, TILE, 0,    TILE, TILE);
+    b.drawImage(pop, 0,    TILE, TILE, TILE);
+    b.drawImage(jsr, TILE, TILE, TILE, TILE);
 
     const style = document.body.style;
     style.backgroundImage = "url(" + block.toDataURL("image/png") + ")";
     style.backgroundSize = (TILE * 2) + "px " + (TILE * 2) + "px";
     style.backgroundRepeat = "repeat";
-  }).catch(err => console.error(err)); // on failure the plain jsrtile background stays
+  }).catch(err => console.error(err)); // on failure the plain jsrtile2 background stays
 </script>
 
 </body>
