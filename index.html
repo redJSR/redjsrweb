@@ -70,7 +70,7 @@
   .page {
     position: absolute;
     inset: 0;
-    background: #0b2a6f;
+    background: #0F9FFF;
   }
 
   .wrap > .item {
@@ -129,7 +129,7 @@
     bottom: 64px;
     box-sizing: border-box;
     border: 4px solid #fff;
-    background: #0b2a6f;
+    background: #0F9FFF;
   }
   .gifbox img {
     display: block;
@@ -167,7 +167,7 @@
     box-sizing: border-box;
     border: 3px solid #fff;
     border-radius: 4px 4px 0 0;
-    background: #0b2a6f;
+    background: #0F9FFF;
   }
   .clip.l { left: 44px; }
   .clip.r { left: 314px; }
@@ -278,11 +278,12 @@
     border-radius: 999px;
   }
 
-  /* Wavy snow drift across the full width, sitting on top of the bar */
+  /* Wavy snow drift across the bottom of the page column, sitting on top of the bar */
   .drift {
     position: absolute;
     z-index: 4;
-    width: 50vw;
+    left: 0;
+    right: 0;
     bottom: 44px;
     height: 34px;
     pointer-events: none;
@@ -291,9 +292,6 @@
       radial-gradient(circle at 22px 34px, #fff 21px, transparent 22px) 0 0 / 90px 34px repeat-x,
       radial-gradient(circle at 66px 34px, #fff 15px, transparent 16px) 0 0 / 90px 34px repeat-x;
   }
-
-  .drift.l { right: 100%; }
-  .drift.r { left: 100%; }
 
   /* ---------- Falling snow ---------- */
   .flakes {
@@ -408,9 +406,8 @@
     <i style="left:42px; top:10px; width:18px; height:360px;"></i>
   </div>
 
-  <!-- Snow: wavy drift on the checkerboard on both sides of the column (not over the blue part) -->
-  <div class="drift l"></div>
-  <div class="drift r"></div>
+  <!-- Snow: wavy drift across the bottom of the blue page, above the bar (stays inside the column) -->
+  <div class="drift"></div>
 
   <!-- Announcements bar: scrolls. Two identical copies make the loop seamless. -->
   <div class="bar">
