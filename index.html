@@ -124,9 +124,15 @@
   }
 
   /* ---------- random.gif box ---------- */
-  .gifbox {
+  .bottomrow {
     left: 32px;
     bottom: 64px;
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;            /* the radio sits right next to the gif box, whatever size the gif is */
+  }
+  .gifbox {
+    position: relative;
     box-sizing: border-box;
     border: 4px solid #fff;
     background: #0F9FFF;
@@ -144,9 +150,8 @@
 
   /* ---------- Radio (right of the gif box): icon, buttons, song link panel ---------- */
   .radio {
-    left: 280px;
-    bottom: 64px;
-    width: 180px;
+    position: relative;
+    width: 164px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -162,7 +167,7 @@
   }
   .radio-btn img {
     display: block;
-    width: 170px;
+    width: 164px;
     height: auto;
   }
   .radio.on .radio-btn img {
@@ -174,45 +179,69 @@
   }
   .radio-controls {
     display: flex;
-    gap: 6px;
+    gap: 10px;
   }
   .radio-controls button {
+    position: relative;
+    overflow: hidden;
     margin: 0;
     padding: 0;
-    width: 46px;
-    height: 34px;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 0;
-    border-radius: 8px;
-    background: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
     cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), inset 0 -5px 8px rgba(0, 0, 0, 0.28);
+  }
+  #rPlay  { background: linear-gradient(#6df06d, #12a812); }   /* green */
+  #rPause { background: linear-gradient(#ffd24d, #f08c00); }   /* orange */
+  #rStop  { background: linear-gradient(#ff7a6e, #d11a0e); }   /* red */
+  /* glossy highlight across the top half */
+  .radio-controls button::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 18%;
+    width: 64%;
+    height: 46%;
+    border-radius: 50%;
+    background: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.08));
+    pointer-events: none;
+  }
+  .radio-controls button:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 -3px 6px rgba(0, 0, 0, 0.3);
   }
   /* The three symbols are drawn with CSS so they are always the same size on every device */
-  .ic { display: block; }
+  .ic {
+    position: relative;
+    z-index: 1;
+    display: block;
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.45));
+  }
   .ic.play {
     width: 0;
     height: 0;
     margin-left: 3px;
-    border-top: 8px solid transparent;
-    border-bottom: 8px solid transparent;
-    border-left: 14px solid #000;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-left: 12px solid #fff;
   }
   .ic.pause {
     box-sizing: border-box;
-    width: 14px;
-    height: 16px;
-    border-left: 5px solid #000;
-    border-right: 5px solid #000;
+    width: 12px;
+    height: 14px;
+    border-left: 4px solid #fff;
+    border-right: 4px solid #fff;
   }
   .ic.stop {
-    width: 14px;
-    height: 14px;
-    background: #000;
-  }
-  .radio-controls button:active {
-    background: #ddd;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background: #fff;
   }
   .radio-panel {
     display: none;
@@ -479,8 +508,10 @@
     <p>Hello! I am Jermonie “redJSR” Bailey! This site is where I post my creations, announcements will be here, I am currently preparing for the release of TIAOJ. So stay tuned!</p>
   </div>
 
+  <!-- Bottom-left row: random.gif box with the radio right next to it -->
+  <div class="item bottomrow">
   <!-- random.gif -->
-  <div class="item gifbox">
+  <div class="gifbox">
     <img src="random.gif" alt="Dancing stickman">
     <!-- snow on the top-left corner -->
     <div class="snow" style="left:-10px; top:-14px;">
@@ -491,7 +522,7 @@
   </div>
 
   <!-- Radio: icon (click to pick a song), play / pause / stop buttons under it -->
-  <div class="item radio" id="radio">
+  <div class="radio" id="radio">
     <button class="radio-btn" id="radioIcon" type="button" aria-label="Choose a song" title="Click to choose a song"><img src="radio.png" alt="Radio"></button>
     <div class="radio-controls">
       <button type="button" id="rPlay" aria-label="Play" title="Play"><span class="ic play"></span></button>
@@ -507,6 +538,8 @@
       </div>
       <div class="radio-status" id="radioStatus">Press ▶︎ to play. The song loops until you change it.</div>
     </div>
+  </div>
+
   </div>
 
   <!-- Billboard: two ropes with clips, swf screen hanging from them -->
