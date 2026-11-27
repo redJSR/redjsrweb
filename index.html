@@ -24,7 +24,8 @@
   }
 
   /* ---- Header: logo piece + six sliced buttons (widths are % of the 967px original) ---- */
-  .head { flex: none; display: flex; align-items: flex-end; font-size: 0; line-height: 0; }
+  .head { flex: none; position: relative; z-index: 0; display: flex; align-items: flex-end; font-size: 0; line-height: 0; }
+  .head .headtop { position: absolute; z-index: -1; left: 25.13%; top: 0; width: 74.87%; height: auto; }
   .head img { display: block; height: auto; flex: none; }
   .head a { display: block; flex: none; line-height: 0; }
   .head a img:hover { filter: brightness(0.85); }
@@ -52,6 +53,7 @@
 <div class="page">
 
   <div class="head">
+    <img class="headtop" src="headertop.png" alt="">
     <img src="headerlogo.png" alt="redJSR" style="width:25.13%">
     <a href="index.html" style="width:11.48%"><img src="homebtn.png" alt="home" style="width:100%"></a>
     <img src="gamesbtn.png" alt="games" style="width:13.13%">
