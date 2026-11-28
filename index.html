@@ -43,6 +43,8 @@
 
   /* ---- Footer: copyright bottom-left, Flash badge bottom-right ---- */
   .footer { flex: none; display: flex; justify-content: space-between; align-items: flex-end; padding: 0 0 0.6vw 0.8%; }
+  .socials { display: flex; gap: 0.8vw; margin-bottom: 0.8vw; font-size: 0; }
+  .socials img { display: block; width: max(28px, 3.2vw); height: auto; }
   .copy { font-size: 1.1em; }
   .flash { width: 26%; text-align: left; }
   .flash p { margin: 0 0 0.5vw; font-size: max(9px, 0.95vw); line-height: 1.15; }
@@ -89,7 +91,14 @@
   </div>
 
   <div class="footer">
-    <div class="copy" id="copyright">&copy; 2023&ndash;2026 redJSR Incorporated.<br>All rights reserved.</div>
+    <div class="left">
+      <div class="socials">
+        <a href="https://youtube.com/@jstar.animations1" target="_blank" rel="noopener"><img src="yt2.png" alt="YouTube"></a>
+        <a href="https://www.roblox.com/users/5133021857/profile" target="_blank" rel="noopener"><img src="rblx2.png" alt="Roblox"></a>
+        <a href="https://scratch.mit.edu/users/Damonie01/" target="_blank" rel="noopener"><img src="scrch2.png" alt="Scratch"></a>
+      </div>
+      <div class="copy" id="copyright">&copy; 2023&ndash;2026 redJSR Incorporated.<br>All rights reserved.</div>
+    </div>
     <div class="flash">
       <p>Hey you! After you’re done browsing, why not install the Flash Player! Bring interactivity to life with a few clicks! (Thank you, Adobe!)</p>
       <a href="https://get.adobe.com/flashplayer" target="_blank" rel="noopener"><img src="IMG_3492.gif" alt="Get Adobe Flash Player"></a>
